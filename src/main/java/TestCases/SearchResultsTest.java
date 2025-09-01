@@ -24,7 +24,7 @@ public class SearchResultsTest extends TestUtils {
     @Test
     public void VerifyFirstResults() {
         String keyword = properties.getProperty("searchKeyWord");
-        waitForPageLoad();
+        WaitForPageLoad();
 
         String firstResult = searchPage.FirstSearchResult().getText();
         String secondResult = searchPage.SecondSearchResult().getText();
@@ -33,14 +33,14 @@ public class SearchResultsTest extends TestUtils {
                 firstResult.contains(keyword) && secondResult.contains(keyword));
     }
 
-//    @Test
-//    public void VerifySecondPageResults(){
-//        searchPage.GoToPage2();
-//        int actualPageCount = searchPage.CountOfPageElements();
-//        int expectedCount = Integer.parseInt(properties.getProperty("itemsPerPage"));
-//
-//        Assert.assertEquals("Results count is less than the expected", expectedCount, actualPageCount);
-//
-//    }
+    @Test
+    public void VerifySecondPageResults(){
+        searchPage.GoToPage2();
+        int actualPageCount = searchPage.CountOfPageElements();
+        int expectedCount = Integer.parseInt(properties.getProperty("itemsPerPage"));
+
+        Assert.assertEquals("Results count is not as expected", expectedCount, actualPageCount);
+
+    }
 
 }

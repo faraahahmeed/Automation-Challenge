@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
+import java.util.Random;
 
 
 public class TestUtils {
@@ -55,7 +56,7 @@ public class TestUtils {
         driver.get(properties.getProperty("URL"));
 
     }
-    public void waitForPageLoad() {
+    public void WaitForPageLoad() {
         wait.until(webDriver -> ((JavascriptExecutor) webDriver)
                         .executeScript("return document.readyState")
                         .equals("complete")
@@ -65,6 +66,14 @@ public class TestUtils {
     public void ScrollToElement(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element);
+    }
+
+    public void RandomPause(){
+        try {
+            Thread.sleep(200 + new Random().nextInt(300));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void TakeScreenshotAtEndOfTest() throws IOException {
