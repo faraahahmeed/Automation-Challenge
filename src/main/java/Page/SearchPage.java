@@ -1,29 +1,33 @@
 package Page;
 
-import Utils.TestUtils;
-import org.openqa.selenium.By;
+import Locators.SearchPageLocators;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
-public class SearchPage extends TestUtils {
+
+/*
+    The class's main focus is interactions with the search page logic
+ */
+public class SearchPage extends SearchPageLocators {
 
     static int secondPageCount;
     static List <WebElement> results;
 
-    WebElement searchBox = driver.findElement(By.id("sb_form_q"));
-    By searchResults = By.xpath("//li[@class='b_algo']");
-    By secondPageLocator = By.xpath("//a[@aria-label='Page 2']");
-    By thirdPageLocator = By.xpath("//a[@aria-label='Page 3']");
-    By pagesList = By.xpath("//li[@class='b_pag']");
 
-
+/*
+    Returns number of elements on the second page of results
+ */
     public void SetSecondPageCount(int count){
         secondPageCount = count;
     }
 
+
+/*
+    If no count os found for the second page, the scripts moves to the page and retrieve the number of items in it
+ */
     public int GetSecondPageCount() {
         if(secondPageCount == 0){
             RandomPause();
@@ -32,13 +36,24 @@ public class SearchPage extends TestUtils {
         return secondPageCount;
     }
 
-    public WebElement GetFirstSearchResult (){
-        return results.get(0);
-    }
-    public WebElement GetSecondSearchResult (){
-        return results.get(1);
+/*
+    Returns the text of the first search result
+ */
+    public String GetFirstSearchResult (){
+        return results.get(0).getText();
     }
 
+/*
+    Returns the text of the second search result
+ */
+    public String GetSecondSearchResult (){
+        return results.get(1).getText();
+    }
+
+/*
+    Retrieves the specified keyword from the config file and search for it then saving the search results
+    in a list for later use
+ */
     public void SearchForKeyword (){
         wait.until(ExpectedConditions.visibilityOf(searchBox));
         String query = properties.getProperty("searchKeyWord");
@@ -52,6 +67,9 @@ public class SearchPage extends TestUtils {
         results = driver.findElements(searchResults);
     }
 
+/*
+    Goes to the second page of the search results, count the displayed results and saving it for assertions
+ */
     public void GoToPage2(){
 
         ScrollToElement(driver.findElement(pagesList));
@@ -63,10 +81,11 @@ public class SearchPage extends TestUtils {
         SetSecondPageCount(results.size());
     }
 
+/*
+    Goes to the third page of the search results
+ */
     public void GoToPage3(){
-//        if(results.size()==0){
-//            SearchForKeyword();
-//        }
+
         RandomPause();
         ScrollToElement(driver.findElement(pagesList));
 
@@ -77,6 +96,9 @@ public class SearchPage extends TestUtils {
         WaitForPageLoad();
     }
 
+/*
+    Returns the number of results found on the page
+ */
     public int CountOfPageElements(){
         return results.size();
     }
