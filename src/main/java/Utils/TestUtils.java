@@ -22,7 +22,7 @@ public class TestUtils {
     public static WebDriver driver;
 
     /*
-    URL and browser type are read from config file
+    This function parses the Config.properties file to easily read its values within the tests
      */
     public static Properties getProperties() {
         if (properties == null) {
@@ -37,6 +37,12 @@ public class TestUtils {
         }
         return properties;
     }
+/*
+    1. Initializing the driver with the stated browser type form config file
+       a. equalsIgnoreCase is used to avoid input error as much as possible
+       b. all 3 browsers (Google Chrome, Microsoft Edge and Mozilla FireFox) are supported
+   2. Driver has been set to clear cookies and maximize the browser window
+ */
     public static void initialization(){
         properties = getProperties();
         String browserName = properties.getProperty("browser");
@@ -56,6 +62,10 @@ public class TestUtils {
         driver.get(properties.getProperty("URL"));
 
     }
+
+/*
+    Configured to wait for page's ready state to ensure page is fully loaded before interactions
+ */
     public void WaitForPageLoad() {
         wait.until(webDriver -> ((JavascriptExecutor) webDriver)
                         .executeScript("return document.readyState")
@@ -63,11 +73,18 @@ public class TestUtils {
         );
     }
 
+
+/*
+    Scrolling to a desired element in the page
+ */
     public void ScrollToElement(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
     }
 
+/*
+    Used to add random breaks/pauses during the test run to avoid triggering captcha checks
+ */
     public void RandomPause(){
         try {
             Thread.sleep(200 + new Random().nextInt(300));
@@ -76,6 +93,10 @@ public class TestUtils {
         }
     }
 
+
+/*
+    Take screenshots after failed tests for reporting
+ */
     public static void TakeScreenshotAtEndOfTest() throws IOException {
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String currentDir = System.getProperty("user.dir");
