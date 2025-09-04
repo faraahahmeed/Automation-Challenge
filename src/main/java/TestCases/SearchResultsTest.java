@@ -3,37 +3,33 @@ package TestCases;
 import Page.SearchPage;
 import Utils.TestUtils;
 import org.junit.*;
+import org.junit.runners.MethodSorters;
 
 
 /*
     Test class including all 3 testcases
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SearchResultsTest extends TestUtils {
     static SearchPage searchPage;
 
 /*
-    sets up the driver and initializing search page object
- */
-    @BeforeClass
-    public static void SetUp(){
-        initialization();
-        searchPage = new SearchPage();
-    }
-
-/*
+    Sets up the driver and initializing search page object
     To ensure search is done before each testcase
  */
     @Before
-    public void Search(){
+    public void SetUp(){
+        initialization();
+        searchPage = new SearchPage();
         WaitForPageLoad();
         searchPage.SearchForKeyword();
     }
 
 /*
-    quiting the driver after testing is done
+    quiting the driver after testcase is done
  */
-    @AfterClass
-    public static void TearDown(){
+    @After
+    public void TearDown(){
         driver.quit();
     }
 
@@ -43,7 +39,7 @@ public class SearchResultsTest extends TestUtils {
     3. Asserts if the keyword is in both results
  */
     @Test
-    public void VerifyFirstResults() {
+    public void Test1_VerifyFirstResults() {
 
         String keyword = properties.getProperty("searchKeyWord");
         WaitForPageLoad();
@@ -61,7 +57,7 @@ public class SearchResultsTest extends TestUtils {
     3. Asserts that both numbers are equal
  */
     @Test
-    public void VerifySecondPageResults(){
+    public void Test2_VerifySecondPageResults(){
         searchPage.GoToPage2();
 
         int actualPageCount = searchPage.CountOfPageElements();
@@ -77,7 +73,7 @@ public class SearchResultsTest extends TestUtils {
     3. Asserts that both numbers are equal
  */
     @Test
-    public void VerifyThirdPageResults(){
+    public void Test3_VerifyThirdPageResults(){
         searchPage.GoToPage3();
 
         int actualPageCount = searchPage.CountOfPageElements();

@@ -17,9 +17,10 @@ import java.util.Random;
 
 public class TestUtils {
 
-    public WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     public static Properties properties;
     public static WebDriver driver;
+    public static WebDriverWait wait ;
+
 
     /*
     This function parses the Config.properties file to easily read its values within the tests
@@ -56,6 +57,7 @@ public class TestUtils {
         else if(browserName.equalsIgnoreCase("FireFox")){
             driver = new FirefoxDriver();
         }
+        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
 
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
@@ -66,7 +68,7 @@ public class TestUtils {
 /*
     Configured to wait for page's ready state to ensure page is fully loaded before interactions
  */
-    public void WaitForPageLoad() {
+    public static void WaitForPageLoad() {
         wait.until(webDriver -> ((JavascriptExecutor) webDriver)
                         .executeScript("return document.readyState")
                         .equals("complete")
