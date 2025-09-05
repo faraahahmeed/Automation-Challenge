@@ -8,7 +8,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -116,7 +117,8 @@ public class TestUtils {
     public static void TakeScreenshotAtEndOfTest(String methodName) throws IOException {
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String currentDir = System.getProperty("user.dir");
-        String screenshotPath = currentDir + "/screenshots/" + methodName + "_" + System.currentTimeMillis() + ".png";
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String screenshotPath = currentDir + "/screenshots/" + methodName + "_" + timestamp + ".png";
         FileUtils.copyFile(scrFile, new File(screenshotPath));
     }
 
