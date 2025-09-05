@@ -1,5 +1,7 @@
 package Utils;
 
+import com.aventstack.extentreports.*;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -20,6 +22,18 @@ public class TestUtils {
     public static Properties properties;
     public static WebDriver driver;
     public static WebDriverWait wait ;
+    static ExtentReports extent;
+    static ExtentTest test;
+
+    public static ExtentReports getExtent() {
+        return extent;
+    }
+    public static void setTest(ExtentTest test) {
+        TestUtils.test = test;
+    }
+    public static ExtentTest getTest() {
+        return test;
+    }
 
 
     /*
@@ -99,11 +113,24 @@ public class TestUtils {
 /*
     Take screenshots after failed tests for reporting
  */
-    public static void TakeScreenshotAtEndOfTest() throws IOException {
+    public static void TakeScreenshotAtEndOfTest(String methodName) throws IOException {
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String currentDir = System.getProperty("user.dir");
-        FileUtils.copyFile(scrFile, new File(currentDir + "/screenshots/" + System.currentTimeMillis() + ".png"));
+        String screenshotPath = currentDir + "/screenshots/" + methodName + "_" + System.currentTimeMillis() + ".png";
+        FileUtils.copyFile(scrFile, new File(screenshotPath));
     }
 
+
+    public static void startReport() {
+        ExtentSparkReporter report = new ExtentSparkReporter("Test-Report.html");
+        extent = new ExtentReports();
+        extent.attachReporter(report);
+    }
+
+    public static void endReport() {
+        if (extent != null) {
+            extent.flush();
+        }
+    }
 
 }

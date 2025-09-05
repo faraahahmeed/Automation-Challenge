@@ -3,7 +3,10 @@ package TestCases;
 import Page.SearchPage;
 import Utils.TestUtils;
 import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
+
+import java.io.IOException;
 
 
 /*
@@ -12,7 +15,20 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SearchResultsTest extends TestUtils {
     static SearchPage searchPage;
+    String currentMethodName;
 
+    @Rule
+    public TestName testName = new TestName();
+
+    @BeforeClass
+    public static void OpenReport(){
+        startReport();
+    }
+
+    @AfterClass
+    public static void CloseReport(){
+        endReport();
+    }
 /*
     Sets up the driver and initializing search page object
     To ensure search is done before each testcase
@@ -23,6 +39,8 @@ public class SearchResultsTest extends TestUtils {
         searchPage = new SearchPage();
         WaitForPageLoad();
         searchPage.SearchForKeyword();
+        currentMethodName = testName.getMethodName();
+        setTest(getExtent().createTest("Test: " + currentMethodName));
     }
 
 /*
@@ -40,15 +58,25 @@ public class SearchResultsTest extends TestUtils {
  */
     @Test
     public void Test1_VerifyFirstResults() {
+        try {
+            String keyword = properties.getProperty("searchKeyWord");
+            WaitForPageLoad();
 
-        String keyword = properties.getProperty("searchKeyWord");
-        WaitForPageLoad();
+            String firstResult = searchPage.GetFirstSearchResult();
+            String secondResult = searchPage.GetSecondSearchResult();
 
-        String firstResult = searchPage.GetFirstSearchResult();
-        String secondResult = searchPage.GetSecondSearchResult();
-
-        Assert.assertTrue("Keyword is not found in either result",
-                firstResult.contains(keyword) && secondResult.contains(keyword));
+            Assert.assertTrue("Keyword is not found in either result",
+                    firstResult.contains(keyword) && secondResult.contains(keyword));
+            getTest().pass("Test passed");
+        } catch (Throwable t) {
+            try {
+                TakeScreenshotAtEndOfTest(currentMethodName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            getTest().fail("Test failed: " + t.getMessage());
+            throw t;
+        }
     }
 
 /*
@@ -58,13 +86,24 @@ public class SearchResultsTest extends TestUtils {
  */
     @Test
     public void Test2_VerifySecondPageResults(){
-        searchPage.GoToPage2();
+        try {
+            searchPage.GoToPage2();
 
-        int actualPageCount = searchPage.CountOfPageElements();
-        int expectedCount = Integer.parseInt(properties.getProperty("itemsPerPage"));
+            int actualPageCount = searchPage.CountOfPageElements();
+            int expectedCount = Integer.parseInt(properties.getProperty("itemsPerPage"));
 
-        Assert.assertEquals("Results count is not as expected", expectedCount, actualPageCount);
+            Assert.assertEquals("Results count is not as expected", expectedCount, actualPageCount);
 
+            getTest().pass("Test passed");
+        } catch (Throwable t) {
+            try {
+                TakeScreenshotAtEndOfTest(currentMethodName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            getTest().fail("Test failed: " + t.getMessage());
+            throw t;
+        }
     }
 
 /*
@@ -74,13 +113,25 @@ public class SearchResultsTest extends TestUtils {
  */
     @Test
     public void Test3_VerifyThirdPageResults(){
-        searchPage.GoToPage3();
 
-        int actualPageCount = searchPage.CountOfPageElements();
-        int expectedCount = searchPage.GetSecondPageCount();
+        try {
+            searchPage.GoToPage3();
 
-        Assert.assertEquals("Results count is not as expected", expectedCount, actualPageCount);
+            int actualPageCount = searchPage.CountOfPageElements();
+            int expectedCount = searchPage.GetSecondPageCount();
 
+            Assert.assertEquals("Results count is not as expected", expectedCount, actualPageCount);
+
+            getTest().pass("Test passed");
+        } catch (Throwable t) {
+            try {
+                TakeScreenshotAtEndOfTest(currentMethodName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            getTest().fail("Test failed: " + t.getMessage());
+            throw t;
+        }
     }
 
 }
